@@ -22,7 +22,7 @@ This is the official implementation of our paper [CAMSIC](https://arxiv.org/abs/
 
 ## News
 
-* **2025/6/27**: 🔥 We release our Python code for CAMSIC presented in our paper. Have a try!
+* **2025/6/28**: 🔥 We release our Python code for CAMSIC presented in our paper. Have a try!
 
 * **2024/12/10**: 🌟 Our paper has been accepted by AAAI 2025! 🎉 Cheers!
 
@@ -51,9 +51,6 @@ After cloning the repository, you can follow these steps to train CAMSIC models.
 ### Requirements
 
 ```bash
-cd gsplat
-pip install .[dev]
-cd ../
 pip install -r requirements.txt
 ```
 
