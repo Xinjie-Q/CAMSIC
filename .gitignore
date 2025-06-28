@@ -1,0 +1,2 @@
+*.pth.tar
+__pycache__/pretrained_ckpt/*.pth.tar
