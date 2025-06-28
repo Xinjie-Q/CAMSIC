@@ -47,48 +47,6 @@ class MSE_Loss(nn.Module):
         return out
 
 
-class Disparity_MSE_Loss(nn.Module):
-    """Custom rate distortion loss with a Lagrangian parameter."""
-    def __init__(self, beta=0.2, total_epoch=400):
-        super().__init__()
-        self.mse = nn.MSELoss()
-        self.beta = beta
-        self.total_epoch = total_epoch
-
-    def forward(self, output, target, lmbda, epoch=None):
-        target1, target2 = target[0], target[1]
-        N, _, H, W = target1.size()
-        out = {}
-        num_pixels = N * H * W
-
-        # 计算误差
-        out['bpp0'] = sum(
-            (torch.log(likelihoods).sum() / (-math.log(2) * num_pixels))
-            for likelihoods in output['likelihoods'][0].values())
-        out['bpp1'] = sum(
-            (torch.log(likelihoods).sum() / (-math.log(2) * num_pixels))
-            for likelihoods in output['likelihoods'][1].values())    
-        if len(output['likelihoods']) > 2:
-            out["bpp_disp"] = sum(
-                (torch.log(likelihoods).sum() / (-math.log(2) * num_pixels))
-                for likelihoods in output['likelihoods'][2].values())  
-            out['bpp0'] = out['bpp0'] + out["bpp_disp"]/2
-            out["bpp1"] = out["bpp1"] + out["bpp_disp"]/2   
-
-        bpp = out['bpp0'] + out['bpp1']
-        out["bpp_loss"] = bpp/2
-        out["mse0"] = self.mse(output['x_hat'][0], target1)
-        out["mse1"] = self.mse(output['x_hat'][1], target2)
-        out["mse_warp"] = self.mse(output['x_hat'][2], target1)       
-
-        if epoch < self.total_epoch//2:
-            out['mse_loss'] = lmbda * (out["mse0"] + out["mse1"] + self.beta * out["mse_warp"])       #end to end
-        else:
-            out['mse_loss'] = lmbda * (out["mse0"] + out["mse1"])
-        out['loss'] = out['mse_loss'] + bpp
-        return out
-
-
 
 class MS_SSIM_Loss(nn.Module):
     def __init__(self, device, size_average=True, max_val=1):

@@ -22,10 +22,7 @@ from torch import Tensor
 from torch.cuda import amp
 from torch.utils.model_zoo import tqdm
 import compressai
-
-from compressai.zoo.pretrained import load_pretrained
 from models.camsic import *
-from torch.hub import load_state_dict_from_url
 from lib.utils import CropCityscapesArtefacts, MinimalCrop
 import torch.nn as nn
 from compressai.zoo import *
